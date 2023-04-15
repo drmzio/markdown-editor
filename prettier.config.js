@@ -2,7 +2,7 @@
 module.exports = {
   endOfLine: "lf",
   semi: false,
-  singleQuote: false,
+  singleQuote: true,
   tabWidth: 2,
   trailingComma: "es5",
   importOrder: [
@@ -16,7 +16,7 @@ module.exports = {
     "^@/lib/(.*)$",
     "^@/components/(.*)$",
     "^@/styles/(.*)$",
-    "^[./]",
+    "^[./src]",
   ],
   importOrderSeparation: false,
   importOrderSortSpecifiers: true,
