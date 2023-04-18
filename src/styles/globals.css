@@ -10,3 +10,33 @@
 #__next {
   min-height: 100%;
 }
+
+
+/* Remove the back-ticks from code format */
+.ProseMirror code::before,
+.ProseMirror code::after {
+  display: none;
+}
+.ProseMirror .is-empty::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: theme('colors.neutral.200');
+  pointer-events: none;
+  height: 0;
+}
+.ProseMirror :where(code):not(:where(pre *)) {
+  @apply bg-neutral-200 text-neutral-800 rounded py-[0.2rem] px-[0.3rem] dark:bg-neutral-800 dark:text-neutral-400 break-words;
+}
+.ProseMirror :where(ul > li)::marker {
+  @apply text-neutral-800;
+}
+.ProseMirror ul > li {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+.ProseMirror ul > li p {
+  margin: 0 !important;
+}
+.ProseMirror ul ul, ul ol, ol ul, ol ol {
+  margin: 0 !important;
+}

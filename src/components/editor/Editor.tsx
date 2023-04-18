@@ -1,5 +1,11 @@
 import * as React from 'react'
 import { useCallback, useRef, useState } from 'react'
+import { useEditorContext } from '@/content/editor-context'
+import CharacterCount from '@tiptap/extension-character-count'
+import Document from '@tiptap/extension-document'
+import Highlight from '@tiptap/extension-highlight'
+import Placeholder from '@tiptap/extension-placeholder'
+import Typography from '@tiptap/extension-typography'
 import { EditorContent, PureEditorContent, useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import {
@@ -36,11 +42,31 @@ const initialContent = [
   '<p>But a recent study shows that the celebrated appetizer may be linked to a series of rabies cases springing up around the country.</p>',
 ]
 
+const CustomDocument = Document.extend({
+  content: 'heading block*',
+})
+
 export function Editor() {
   const editorRef = useRef<PureEditorContent>()
   const [nodeList, setNodeList] = useState<HTMLElement[]>([])
+  const [editorContext, setEditorContext] = useEditorContext()
   const editor = useEditor({
-    extensions: [StarterKit],
+    extensions: [
+      CustomDocument,
+      Highlight,
+      Typography,
+      StarterKit.configure({ document: false }),
+      Placeholder.configure({
+        placeholder: ({ node }) => {
+          if (node.type.name === 'heading') {
+            return 'Untitled document'
+          }
+          // Placeholder on every new line
+          return 'Write something...'
+        },
+      }),
+      CharacterCount.configure(),
+    ],
     editorProps: {
       attributes: {
         class:
@@ -49,9 +75,25 @@ export function Editor() {
     },
     onCreate: ({ editor }) => {
       updateNodeList(editor.view.dom.childNodes)
+      setEditorContext({
+        type: 'SET_WORD_COUNT',
+        payload: editor.storage.characterCount.words(),
+      })
+      setEditorContext({
+        type: 'SET_CHAR_COUNT',
+        payload: editor.storage.characterCount.characters(),
+      })
     },
     onUpdate: ({ editor }) => {
       updateNodeList(editor.view.dom.childNodes)
+      setEditorContext({
+        type: 'SET_WORD_COUNT',
+        payload: editor.storage.characterCount.words(),
+      })
+      setEditorContext({
+        type: 'SET_CHAR_COUNT',
+        payload: editor.storage.characterCount.characters(),
+      })
     },
     content: initialContent.join(''),
   })
@@ -75,6 +117,8 @@ export function Editor() {
     </div>
   )
 }
+
+type HeadingTags = 'H1' | 'H2' | 'H3' | 'H4' | 'H5' | 'H6'
 
 interface EditorActionsProps {
   nodes: HTMLElement[]
@@ -112,18 +156,6 @@ export function EditorActions({ nodes }: EditorActionsProps) {
                   node={node}
                   onChange={handleChangeHeading}
                 />
-                {/*<Button variant="ghost" size="sm" className="text-neutral-400">
-                  {
-                    {
-                      H1: <Heading1 />,
-                      H2: <Heading2 />,
-                      H3: <Heading3 />,
-                      H4: <Heading4 />,
-                      H5: <Heading5 />,
-                      H6: <Heading6 />,
-                    }[node.tagName]
-                  }
-                </Button>*/}
               </div>
             )
           default:
@@ -136,14 +168,14 @@ export function EditorActions({ nodes }: EditorActionsProps) {
 
 interface EditorActionHeadingProps {
   node: HTMLElement
-  onChange?: (node: HTMLElement, tagName: string) => void
+  onChange?: (node: HTMLElement, tagName: HeadingTags) => void
 }
 
 export function EditorActionHeading({
   node,
   onChange,
 }: EditorActionHeadingProps) {
-  const updateNode = (nodeName) => {
+  const updateNode = (nodeName: HeadingTags) => {
     onChange(node, nodeName)
   }
 
@@ -165,17 +197,26 @@ export function EditorActionHeading({
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
         <DropdownMenuGroup>
-          <DropdownMenuItem onClick={() => updateNode('H1')}>
+          <DropdownMenuItem
+            disabled={node.tagName === 'H1'}
+            onClick={() => updateNode('H2')}
+          >
             <Heading1 className="mr-2 h-4 w-4" />
             <span>Heading 1</span>
             <DropdownMenuShortcut>⌘1</DropdownMenuShortcut>
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => updateNode('H2')}>
+          <DropdownMenuItem
+            disabled={node.tagName === 'H2'}
+            onClick={() => updateNode('H2')}
+          >
             <Heading2 className="mr-2 h-4 w-4" />
             <span>Heading 2</span>
             <DropdownMenuShortcut>⌘2</DropdownMenuShortcut>
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => updateNode('H3')}>
+          <DropdownMenuItem
+            disabled={node.tagName === 'H3'}
+            onClick={() => updateNode('H3')}
+          >
             <Heading3 className="mr-2 h-4 w-4" />
             <span>Heading 3</span>
             <DropdownMenuShortcut>⌘3</DropdownMenuShortcut>

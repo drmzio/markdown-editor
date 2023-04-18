@@ -1,35 +1,58 @@
 import Link from 'next/link'
+import { useEditorContext } from '@/content/editor-context'
 import { Code, Edit3, Menu } from 'lucide-react'
 
 import { siteConfig } from '@/config/site'
-import { Icons } from '@/components/icons'
-import { MainNav } from '@/components/main-nav'
-import { ThemeToggle } from '@/components/theme-toggle'
+import { Icons } from '@/components/Icons'
+import { ThemeToggle } from '@/components/ThemeToggle'
 import { Button, buttonVariants } from '@/components/ui/button'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
-export function SiteHeader() {
+export function AppHeader() {
+  const [editorContext, setEditorContext] = useEditorContext()
+
+  const handleClick = () => {
+    setEditorContext({
+      type: 'SET_WORD_COUNT',
+      payload: editorContext.wordCount + 1,
+    })
+  }
+
   return (
     <header className="ui-header sticky top-0 z-40 w-full border-b border-b-neutral-200 bg-white dark:border-b-neutral-700 dark:bg-neutral-900">
       <div className="ui-container mx-auto w-full max-w-full px-4">
-        <div className="ui-toolbar flex h-16 items-center">
+        <div className="ui-toolbar relative flex h-16 items-center">
           {/*<MainNav items={siteConfig.mainNav} />*/}
           <div className="mr-auto flex-1">
-            <Button variant="outline" size="sm" className="w-9">
+            <Button
+              variant="outline"
+              size="sm"
+              className="w-9"
+              onClick={handleClick}
+            >
               <Menu className="h-4 w-4 text-neutral-500" />
               <span className="sr-only">Menu</span>
             </Button>
           </div>
           <div className="mx-auto shrink-0">
-            <nav className="flex items-center space-x-2">
-              <Button variant="outline" size="sm" className="min-w-[100px]">
-                <Edit3 className="mr-2 h-4 w-4 text-neutral-500" />
-                Write
-              </Button>
-              <Button variant="outline" size="sm" className="min-w-[100px]">
-                <Code className="mr-2 h-4 w-4 text-neutral-500" />
-                Output
-              </Button>
-            </nav>
+            <Tabs
+              defaultValue="write"
+              value={editorContext.view}
+              onValueChange={(view) =>
+                setEditorContext({ type: 'SET_VIEW', payload: view })
+              }
+            >
+              <TabsList>
+                <TabsTrigger value="write">
+                  <Edit3 className="mr-2 h-4 w-4 text-neutral-500" />
+                  Write
+                </TabsTrigger>
+                <TabsTrigger value="output">
+                  <Code className="mr-2 h-4 w-4 text-neutral-500" />
+                  Output
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
           </div>
           <div className="ml-auto flex-1">
             <nav className="flex items-center justify-end space-x-2">
