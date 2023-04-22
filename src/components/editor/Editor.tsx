@@ -29,7 +29,7 @@ import {
 
 const initialContent = [
   '<h1>The heading</h1>',
-  '<p>For years parents have espoused the health <em>benefits</em> of eating <strong>garlic bread</strong> with cheese to their children, with the food earning such an iconic status in our culture that kids will often dress up as warm, cheesy loaf for Halloween.</p>',
+  '<p>For years parents have espoused the health <em>benefits</em> of eating <strong>garlic bread</strong> with cheese to their <code>children</code>, with the food earning such an iconic status in our culture that kids will often dress up as warm, cheesy loaf for Halloween.</p>',
   '<h2>What the science tells us</h2>',
   '<p>For years parents have espoused the health <em>benefits</em> of eating <strong>garlic bread</strong> with cheese to their children, with the food earning such an iconic status in our culture that kids will often dress up as warm, cheesy loaf for Halloween.</p>',
   '<h3>Garlic bread with cheese</h3>',
@@ -59,7 +59,7 @@ export function Editor() {
       Placeholder.configure({
         placeholder: ({ node }) => {
           if (node.type.name === 'heading') {
-            return 'Untitled document'
+            return 'Start writing'
           }
           // Placeholder on every new line
           return 'Write something...'

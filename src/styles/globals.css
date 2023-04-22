@@ -25,7 +25,8 @@
   height: 0;
 }
 .ProseMirror :where(code):not(:where(pre *)) {
-  @apply bg-neutral-200 text-neutral-800 rounded py-[0.2rem] px-[0.3rem] dark:bg-neutral-800 dark:text-neutral-400 break-words;
+  /*@apply bg-neutral-100 text-neutral-800 rounded py-[0.2rem] px-[0.3rem] dark:text-neutral-400 break-words border font-normal;*/
+  @apply bg-neutral-100 text-neutral-800 rounded py-[0.2rem] dark:text-neutral-400 break-words border font-normal;
 }
 .ProseMirror :where(ul > li)::marker {
   @apply text-neutral-800;
@@ -39,4 +40,7 @@
 }
 .ProseMirror ul ul, ul ol, ol ul, ol ol {
   margin: 0 !important;
+}
+.ProseMirror pre {
+  white-space: pre;
 }

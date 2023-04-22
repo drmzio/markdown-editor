@@ -43,11 +43,11 @@ export function AppHeader() {
               }
             >
               <TabsList>
-                <TabsTrigger value="write">
+                <TabsTrigger value="write" className="min-w-[120px]">
                   <Edit3 className="mr-2 h-4 w-4 text-neutral-500" />
                   Write
                 </TabsTrigger>
-                <TabsTrigger value="output">
+                <TabsTrigger value="output" className="min-w-[120px]">
                   <Code className="mr-2 h-4 w-4 text-neutral-500" />
                   Output
                 </TabsTrigger>
@@ -56,38 +56,6 @@ export function AppHeader() {
           </div>
           <div className="ml-auto flex-1">
             <nav className="flex items-center justify-end space-x-2">
-              <Link
-                href={siteConfig.links.github}
-                target="_blank"
-                rel="noreferrer"
-              >
-                <div
-                  className={buttonVariants({
-                    size: 'sm',
-                    variant: 'ghost',
-                    className: 'text-neutral-700 dark:text-neutral-400',
-                  })}
-                >
-                  <Icons.gitHub className="h-5 w-5" />
-                  <span className="sr-only">GitHub</span>
-                </div>
-              </Link>
-              <Link
-                href={siteConfig.links.twitter}
-                target="_blank"
-                rel="noreferrer"
-              >
-                <div
-                  className={buttonVariants({
-                    size: 'sm',
-                    variant: 'ghost',
-                    className: 'text-neutral-700 dark:text-neutral-400',
-                  })}
-                >
-                  <Icons.twitter className="h-5 w-5 fill-current" />
-                  <span className="sr-only">Twitter</span>
-                </div>
-              </Link>
               <ThemeToggle />
             </nav>
           </div>
