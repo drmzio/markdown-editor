@@ -17,7 +17,7 @@ import {
   Heading6,
 } from 'lucide-react'
 
-import { Button } from '@/components/ui/button'
+import { Button } from '@/components/ui/Button'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,7 +25,8 @@ import {
   DropdownMenuItem,
   DropdownMenuShortcut,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
+} from '@/components/ui/DropdownMenu'
+import { CodemarkExtension } from './extensions/CodemarkExtension'
 
 const initialContent = [
   '<h1>The heading</h1>',
@@ -55,6 +56,7 @@ export function Editor() {
       CustomDocument,
       Highlight,
       Typography,
+      CodemarkExtension,
       StarterKit.configure({ document: false }),
       Placeholder.configure({
         placeholder: ({ node }) => {

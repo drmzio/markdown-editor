@@ -5,7 +5,7 @@ import { NavItem } from '@/types/nav'
 import { siteConfig } from '@/config/site'
 import { cn } from '@/lib/utils'
 import { Icons } from '@/components/Icons'
-import { Button } from '@/components/ui/button'
+import { Button } from '@/components/ui/Button'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,7 +13,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
+} from '@/components/ui/DropdownMenu'
 
 interface MainNavProps {
   items?: NavItem[]

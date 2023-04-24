@@ -20,13 +20,12 @@
 .ProseMirror .is-empty::before {
   content: attr(data-placeholder);
   float: left;
-  color: theme('colors.neutral.200');
+  color: theme('colors.neutral.300');
   pointer-events: none;
   height: 0;
 }
 .ProseMirror :where(code):not(:where(pre *)) {
-  /*@apply bg-neutral-100 text-neutral-800 rounded py-[0.2rem] px-[0.3rem] dark:text-neutral-400 break-words border font-normal;*/
-  @apply bg-neutral-100 text-neutral-800 rounded py-[0.2rem] dark:text-neutral-400 break-words border font-normal;
+  @apply bg-neutral-100 text-neutral-800 border-neutral-200 font-normal break-words border rounded py-[0.2rem] px-[0.3rem] dark:bg-neutral-800 dark:text-neutral-400 dark:border-neutral-700;
 }
 .ProseMirror :where(ul > li)::marker {
   @apply text-neutral-800;

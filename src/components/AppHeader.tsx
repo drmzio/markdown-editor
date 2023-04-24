@@ -5,8 +5,8 @@ import { Code, Edit3, Menu } from 'lucide-react'
 import { siteConfig } from '@/config/site'
 import { Icons } from '@/components/Icons'
 import { ThemeToggle } from '@/components/ThemeToggle'
-import { Button, buttonVariants } from '@/components/ui/button'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Button, buttonVariants } from '@/components/ui/Button'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs'
 
 export function AppHeader() {
   const [editorContext, setEditorContext] = useEditorContext()
