@@ -5,6 +5,8 @@ import CharacterCount from '@tiptap/extension-character-count'
 import Document from '@tiptap/extension-document'
 import Highlight from '@tiptap/extension-highlight'
 import Placeholder from '@tiptap/extension-placeholder'
+import TaskItem from '@tiptap/extension-task-item'
+import TaskList from '@tiptap/extension-task-list'
 import Typography from '@tiptap/extension-typography'
 import { EditorContent, PureEditorContent, useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
@@ -67,7 +69,11 @@ export function Editor() {
           return 'Write something...'
         },
       }),
-      CharacterCount.configure(),
+      CharacterCount,
+      TaskList,
+      TaskItem.configure({
+        nested: true,
+      }),
     ],
     editorProps: {
       attributes: {
