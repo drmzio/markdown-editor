@@ -27,14 +27,20 @@
 .ProseMirror :where(code):not(:where(pre *)) {
   @apply bg-neutral-100 text-neutral-800 border-neutral-200 font-normal break-words border rounded py-[0.2rem] px-[0.3rem] dark:bg-neutral-800 dark:text-neutral-400 dark:border-neutral-700;
 }
-.ProseMirror :where(ul > li)::marker {
-  @apply text-neutral-800;
+/*.ProseMirror :where(ul > li)::marker {*/
+/*  @apply text-neutral-800;*/
+/*}*/
+.ProseMirror ul,
+.ProseMirror ol {
+  padding-left: theme('spacing.8');
 }
-.ProseMirror ul > li {
+.ProseMirror ul > li,
+.ProseMirror ol > li {
   margin-top: 0 !important;
   margin-bottom: 0 !important;
 }
-.ProseMirror ul > li p {
+.ProseMirror ul > li p,
+.ProseMirror ol > li p {
   margin: 0 !important;
 }
 .ProseMirror ul ul, ul ol, ol ul, ol ol {
@@ -47,6 +53,9 @@
   list-style: none;
   padding: 0;
 }
+.ProseMirror ul[data-type="taskList"] input[type="checkbox"]:not(:checked) {
+  background-color: transparent;
+}
 .ProseMirror ul[data-type="taskList"] p {
   margin: 0;
 }
@@ -58,10 +67,30 @@
 .ProseMirror ul[data-type="taskList"] li > label {
   flex: 0 0 auto;
   user-select: none;
-  margin-right: 0.5rem;
+  margin-right: theme('spacing.4');
   margin-top: 0;
 }
 .ProseMirror ul[data-type="taskList"] li > div {
   flex: 1 1 auto;
   margin: 0;
 }
+.ProseMirror :where(blockquote) {
+  font-weight: inherit;
+  font-style: inherit;
+  /*background-color: theme('colors.neutral.50');*/
+}
+.ProseMirror :where(blockquote p:first-of-type)::before,
+.ProseMirror :where(blockquote p:first-of-type)::after {
+  display: none;
+}
+/*.ProseMirror p strong::before,
+.ProseMirror p strong::after {
+  content: "\002A";
+  pointer-events: none;
+  width: 0;
+}
+.ProseMirror p em::before,
+.ProseMirror p em::after {
+  content: "_";
+  pointer-events: none;
+}*/

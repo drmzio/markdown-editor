@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useEditorContext } from '@/content/editor-context'
 import CharacterCount from '@tiptap/extension-character-count'
 import Document from '@tiptap/extension-document'
@@ -46,7 +46,7 @@ const initialContent = [
 ]
 
 const CustomDocument = Document.extend({
-  content: 'heading block*',
+  /*content: 'heading block*',*/
 })
 
 export function Editor() {
@@ -62,11 +62,11 @@ export function Editor() {
       StarterKit.configure({ document: false }),
       Placeholder.configure({
         placeholder: ({ node }) => {
-          if (node.type.name === 'heading') {
+          /*if (node.type.name === 'heading') {
             return 'Start writing'
-          }
+          }*/
           // Placeholder on every new line
-          return 'Write something...'
+          return 'Start writing...'
         },
       }),
       CharacterCount,
@@ -78,11 +78,10 @@ export function Editor() {
     editorProps: {
       attributes: {
         class:
-          'prose max-w-full dark:prose-invert prose-md sm:prose-md lg:prose-lg xl:prose-lg mx-auto font-mono focus:outline-none min-h-screen',
+          'prose prose-neutral max-w-full dark:prose-invert prose-md sm:prose-md lg:prose-lg xl:prose-lg mx-auto font-mono focus:outline-none min-h-screen',
       },
     },
     onCreate: ({ editor }) => {
-      updateNodeList(editor.view.dom.childNodes)
       setEditorContext({
         type: 'SET_WORD_COUNT',
         payload: editor.storage.characterCount.words(),
@@ -91,9 +90,9 @@ export function Editor() {
         type: 'SET_CHAR_COUNT',
         payload: editor.storage.characterCount.characters(),
       })
+      updateNodeList(editor.view.dom.childNodes)
     },
     onUpdate: ({ editor }) => {
-      updateNodeList(editor.view.dom.childNodes)
       setEditorContext({
         type: 'SET_WORD_COUNT',
         payload: editor.storage.characterCount.words(),
@@ -102,6 +101,7 @@ export function Editor() {
         type: 'SET_CHAR_COUNT',
         payload: editor.storage.characterCount.characters(),
       })
+      updateNodeList(editor.view.dom.childNodes)
     },
     content: initialContent.join(''),
   })
@@ -113,6 +113,11 @@ export function Editor() {
     })
     setNodeList(_childNodes)
   }, [])
+
+  useEffect(() => {
+    if (!editor) return
+    updateNodeList(editor.view.dom.childNodes)
+  }, [editor])
 
   if (typeof window !== 'undefined') {
     window['__EDITOR__'] = editor
@@ -133,60 +138,57 @@ interface EditorActionsProps {
 }
 
 export function EditorActions({ nodes }: EditorActionsProps) {
-  function handleChangeHeading(node, nodeName) {
+  const changeHeading = (node: HTMLElement, nodeName: string) => {
+    console.log('-- changeHeading --', nodeName, node)
     const oldNode = node.cloneNode(true) as HTMLElement
     const newNode = document.createElement(nodeName) as HTMLElement
     newNode.innerHTML = oldNode.innerHTML
     node.replaceWith(newNode)
   }
 
-  return (
-    <div className="ui-editor-actions">
-      {nodes.map((node, index) => {
-        switch (node.tagName) {
-          case 'H1':
-          case 'H2':
-          case 'H3':
-          case 'H4':
-          case 'H5':
-          case 'H6':
-            return (
-              <div
-                key={index}
-                className="absolute -ml-12"
-                style={{
-                  /* prettier-ignore */
-                  top: node.offsetTop,
-                  left: node.offsetLeft,
-                }}
-              >
-                <EditorActionHeading
-                  node={node}
-                  onChange={handleChangeHeading}
-                />
-              </div>
-            )
-          default:
-            return null
-        }
-      })}
-    </div>
-  )
+  const renderActions = useCallback(() => {
+    return nodes.map((node, index) => {
+      let offsetTop = 0
+      let offsetleft = 0
+      switch (node.tagName) {
+        case 'H1':
+          offsetTop = 6
+        case 'H2':
+        case 'H3':
+        case 'H4':
+        case 'H5':
+        case 'H6':
+          return (
+            <div
+              key={index}
+              className="absolute -ml-12"
+              style={{
+                /* prettier-ignore */
+                top: (node.offsetTop + offsetTop),
+                left: node.offsetLeft + offsetleft,
+              }}
+            >
+              <HeadingAction
+                tagName={node.tagName}
+                onChange={(newTag) => changeHeading(node, newTag)}
+              />
+            </div>
+          )
+        default:
+          return null
+      }
+    })
+  }, [nodes])
+
+  return <div className="ui-editor-actions">{renderActions()}</div>
 }
 
-interface EditorActionHeadingProps {
-  node: HTMLElement
-  onChange?: (node: HTMLElement, tagName: HeadingTags) => void
+interface HeadingActionProps {
+  tagName: HeadingTags
+  onChange?: (tagName: HeadingTags) => void
 }
 
-export function EditorActionHeading({
-  node,
-  onChange,
-}: EditorActionHeadingProps) {
-  const updateNode = (nodeName: HeadingTags) => {
-    onChange(node, nodeName)
-  }
-
+export function HeadingAction({ tagName, onChange }: HeadingActionProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -199,47 +201,56 @@ export function EditorActionHeading({
               H4: <Heading4 />,
               H5: <Heading5 />,
               H6: <Heading6 />,
-            }[node.tagName]
+            }[tagName]
           }
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
         <DropdownMenuGroup>
           <DropdownMenuItem
-            disabled={node.tagName === 'H1'}
-            onClick={() => updateNode('H2')}
+            disabled={tagName === 'H1'}
+            onClick={() => onChange('H1')}
           >
             <Heading1 className="mr-2 h-4 w-4" />
             <span>Heading 1</span>
             <DropdownMenuShortcut>⌘1</DropdownMenuShortcut>
           </DropdownMenuItem>
           <DropdownMenuItem
-            disabled={node.tagName === 'H2'}
-            onClick={() => updateNode('H2')}
+            disabled={tagName === 'H2'}
+            onClick={() => onChange('H2')}
           >
             <Heading2 className="mr-2 h-4 w-4" />
             <span>Heading 2</span>
             <DropdownMenuShortcut>⌘2</DropdownMenuShortcut>
           </DropdownMenuItem>
           <DropdownMenuItem
-            disabled={node.tagName === 'H3'}
-            onClick={() => updateNode('H3')}
+            disabled={tagName === 'H3'}
+            onClick={() => onChange('H3')}
           >
             <Heading3 className="mr-2 h-4 w-4" />
             <span>Heading 3</span>
             <DropdownMenuShortcut>⌘3</DropdownMenuShortcut>
           </DropdownMenuItem>
-          <DropdownMenuItem>
+          <DropdownMenuItem
+            disabled={tagName === 'H4'}
+            onClick={() => onChange('H4')}
+          >
             <Heading4 className="mr-2 h-4 w-4" />
             <span>Heading 4</span>
             <DropdownMenuShortcut>⌘4</DropdownMenuShortcut>
           </DropdownMenuItem>
-          <DropdownMenuItem>
+          <DropdownMenuItem
+            disabled={tagName === 'H5'}
+            onClick={() => onChange('H5')}
+          >
             <Heading5 className="mr-2 h-4 w-4" />
             <span>Heading 5</span>
             <DropdownMenuShortcut>⌘5</DropdownMenuShortcut>
           </DropdownMenuItem>
-          <DropdownMenuItem>
+          <DropdownMenuItem
+            disabled={tagName === 'H6'}
+            onClick={() => onChange('H6')}
+          >
             <Heading6 className="mr-2 h-4 w-4" />
             <span>Heading 6</span>
             <DropdownMenuShortcut>⌘6</DropdownMenuShortcut>

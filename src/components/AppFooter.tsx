@@ -8,15 +8,15 @@ export function AppFooter() {
       <div className="ui-container mx-auto w-full max-w-full px-4">
         <div className="ui-toolbar flex h-8 items-center">
           <div className="mr-auto flex-1">
-            <ul className="dark:text-neutral-40 flex space-x-3 text-xs text-neutral-500">
+            <ul className="flex space-x-3 text-xs text-neutral-500 dark:text-neutral-400">
               <li>
-                <code className="text-neutral-700">
+                <code className="text-neutral-700 dark:text-neutral-300">
                   {editorContext.wordCount}
                 </code>
                 {` words`}
               </li>
               <li>
-                <code className="text-neutral-700">
+                <code className="text-neutral-700 dark:text-neutral-300">
                   {editorContext.charCount}
                 </code>
                 {` characters`}
